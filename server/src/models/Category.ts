@@ -10,7 +10,7 @@ interface ICategoryAttributes {
 }
 
 // Optional attributes for creating a Country
-interface ICategoryCreationAttributes extends Optional<ICategoryAttributes, 'createdAt' | 'updatedAt'> {}
+interface ICategoryCreationAttributes extends Optional<ICategoryAttributes, 'category_id' |'createdAt' | 'updatedAt'> {}
 
 // Define the Country model
 class Category extends Model<ICategoryAttributes, ICategoryCreationAttributes> implements ICategoryAttributes {

@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 async function startServer() {
-  await db.sync({ force: true });
+  await db.sync({ alter: true });
   // sequelize.sync(); Safe Sync option
   console.log('Database schema updated successfully');
 
