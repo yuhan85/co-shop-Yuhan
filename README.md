@@ -91,12 +91,16 @@
    5. npm install --save-dev @types/cors   
    (Role: Since cors is written in JavaScript, this package provides TypeScript typings so that you get type checking and IntelliSense support in your TypeScript code when using cors.)   
 
-   6. Create dabase according to .env
+   6. Create empty `coshop-db` dabase according to .env
     (Database is under models folder, make sure "DB_PASSWORD" is your password)
 
-   7. run `client/.gitignore` in the terminal (connect to db, but auto execute drop some tables statement, don't know where those statements come from)
+   7. run `client/.gitignore` in the terminal 
 
-   8. run `ts-node index.ts` error "Unknown database 'coshop-db', I dropped the database. 
+   8. run `ts-node index.ts` server is listening local host 3000
+
+   9. run `npm run dev` in client directory, front end works for every page other than product page
+
+   10. put .gitignore under project to ignore all node_modules
 
 
 ## License
