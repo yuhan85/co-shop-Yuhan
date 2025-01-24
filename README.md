@@ -116,7 +116,7 @@
 
    15. Custom Errors class globally
 
-   
+   16. npm install express-validator
 
 ## License
 

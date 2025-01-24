@@ -6,8 +6,6 @@ import db from './lib/dbConnection';
 import './models'; //models doesn't use here
 import app from './app'; // Import the app instance
 
-// import { errorHandler } from './middleware/errorMiddleware';
-// app.use(errorHandler);
 
 const server = express();
 const port = 3000;
