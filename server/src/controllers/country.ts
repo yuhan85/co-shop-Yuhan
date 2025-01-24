@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction  } from 'express';
 import Country from '../models/Country'; // Adjust path to your Country model
 import Address from '../models/Address'; // Adjust path to your Address model
-
+import { 
+    BadRequestError, 
+    NotFoundError, 
+    InternalServerError 
+} from '../errors/customErrors';
 
 //confirm the path
 
@@ -17,6 +21,33 @@ export const createCountry = async (req: Request, res: Response): Promise<void> 
         res.status(201).json(newCountry);
     } catch (error:any) {
         res.status(500).json({ message: 'Error creating country', error: error.message });
+    }
+};
+
+export const createCountry = async (
+    req: Request, 
+    res: Response, 
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { country_name } = req.body;
+
+        if (!country_name?.trim()) {
+            throw new BadRequestError('Country name is required');
+        }
+
+        const existingCountry = await Country.findOne({ 
+            where: { country_name } 
+        });
+
+        if (existingCountry) {
+            throw new BadRequestError('Country already exists');
+        }
+
+        const newCountry = await Country.create({ country_name });
+        res.status(201).json(newCountry);
+    } catch (error) {
+        next(error);
     }
 };
 // get a country by name

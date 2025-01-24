@@ -3,26 +3,31 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import db from './lib/dbConnection';
-import './models';
+import './models'; //models doesn't use here
+import app from './app'; // Import the app instance
 
+// import { errorHandler } from './middleware/errorMiddleware';
+// app.use(errorHandler);
 
-const app = express();
+const server = express();
 const port = 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+server.use(cors());
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+
+server.use(app);// Use the app with all attached routes
 
 async function startServer() {
   await db.sync({ alter: true });
   // sequelize.sync(); Safe Sync option
   console.log('Database schema updated successfully');
 
-  app.get('/', (req: Request, res: Response) => {
+  server.get('/', (req: Request, res: Response) => {
     res.send('Hello World!');
   });
 
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
   });
 }
