@@ -1,139 +1,82 @@
 import { Request, Response, NextFunction } from 'express';
 import Country from '../models/Country';
 import Address from '../models/Address';
+
 import { 
     BadRequestError, 
-    NotFoundError, 
-    InternalServerError 
+    NotFoundError
 } from '../errors/customErrors';
 
-export const createCountry = async (
-    req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const { country_name } = req.body;
+/**
+ * Error-handling wrapper for async controller functions.
+ */
+const asyncHandler = (fn: Function) => 
+    (req: Request, res: Response, next: NextFunction) => 
+        Promise.resolve(fn(req, res, next)).catch(next);
 
-        if (!country_name?.trim()) {
-            throw new BadRequestError('Country name is required');
-        }
+export const createCountry = asyncHandler(async (req: Request, res: Response) => {
+    const { country_name } = req.body;
 
-        const existingCountry = await Country.findOne({ 
-            where: { country_name } 
-        });
-
-        if (existingCountry) {
-            throw new BadRequestError('Country already exists');
-        }
-
-        const newCountry = await Country.create({ country_name });
-        res.status(201).json(newCountry);
-    } catch (error) {
-        next(error);
+    // Check if country already exists
+    const existingCountry = await Country.findOne({ where: { country_name } });
+    if (existingCountry) {
+        throw new BadRequestError('Country already exists');
     }
-};
 
-export const getCountryByName = async (
-    req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const { name } = req.params;
+    const newCountry = await Country.create({ country_name });
+    res.status(201).json(newCountry);
+});
 
-        if (!name) {
-            throw new BadRequestError('Country name is required');
-        }
+export const getCountryByName = asyncHandler(async (req: Request, res: Response) => {
+    const {  country_name } = req.params;
 
-        const country = await Country.findOne({ 
-            where: { country_name: name } 
-        });
-
-        if (!country) {
-            throw new NotFoundError(`Country with name '${name}' not found`);
-        }
-
-        res.status(200).json(country);
-    } catch (error) {
-        next(error);
+    const country = await Country.findOne({ where: { country_name } });
+    if (!country) {
+        throw new NotFoundError(`Country with name '${ country_name}' not found`);
     }
-};
 
-export const getAllCountries = async (
-    _req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const countries = await Country.findAll({ 
-            include: Address 
-        });
-        res.status(200).json(countries);
-    } catch (error) {
-        next(error);
+    res.status(200).json(country);
+});
+
+export const getAllCountries = asyncHandler(async (_req: Request, res: Response) => {
+    const countries = await Country.findAll({ include: Address });
+    res.status(200).json(countries);
+});
+
+export const getCountryById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const country = await Country.findByPk(id, { include: Address });
+    if (!country) {
+        throw new NotFoundError('Country not found');
     }
-};
 
-export const getCountryById = async (
-    req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-        const country = await Country.findByPk(id, { include: Address });
+    res.status(200).json(country);
+});
 
-        if (!country) {
-            throw new NotFoundError('Country not found');
-        }
+export const updateCountry = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { country_name } = req.body;
 
-        res.status(200).json(country);
-    } catch (error) {
-        next(error);
+    const country = await Country.findByPk(id);
+    if (!country) {
+        throw new NotFoundError('Country not found');
     }
-};
 
-export const updateCountry = async (
-    req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-        const { country_name } = req.body;
+    country.country_name = country_name || country.country_name;
+    await country.save();
 
-        const country = await Country.findByPk(id);
+    res.status(200).json(country);
+});
 
-        if (!country) {
-            throw new NotFoundError('Country not found');
-        }
+export const deleteCountry = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-        country.country_name = country_name || country.country_name;
-        await country.save();
-
-        res.status(200).json(country);
-    } catch (error) {
-        next(error);
+    const country = await Country.findByPk(id);
+    if (!country) {
+        throw new NotFoundError('Country not found');
     }
-};
 
-export const deleteCountry = async (
-    req: Request, 
-    res: Response, 
-    next: NextFunction
-): Promise<void> => {
-    try {
-        const { id } = req.params;
-        const country = await Country.findByPk(id);
-
-        if (!country) {
-            throw new NotFoundError('Country not found');
-        }
-
-        await country.destroy();
-        res.status(200).json({ message: 'Country deleted successfully' });
-    } catch (error) {
-        next(error);
-    }
-};
+    await country.destroy();
+    res.status(200).json({ message: 'Country deleted successfully' });
+});
