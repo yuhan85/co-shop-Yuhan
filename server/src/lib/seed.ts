@@ -22,7 +22,7 @@ import UserAddress from '../models/UserAddress';
     // Sync the database (use force: true to reset during testing)
     await sequelize.sync({ alter: true });
 
-    // Seed Countries
+    // Seed Countries why country have bulkCreate built in method?
     const countries = await Country.bulkCreate([
       { country_name: 'USA' },
       { country_name: 'Canada' },
