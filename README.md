@@ -102,6 +102,21 @@
 
    10. put .gitignore under project to ignore all node_modules
 
+   11. 2025-1-21 add seeds by run 'ts-node .\lib\seed.ts' under \server\src
+
+   12. Need to run `npm install` after pull to update node--modules
+
+   13. Install Sequelize acts as a bridge between your   
+        application's object-oriented code and relational databases
+
+   npm install sequelize mysql2
+       npm install --save-dev @types/sequelize
+
+   14.  Optimize country controller and model
+
+   15. Custom Errors class globally
+
+   16. npm install express-validator
 
 ## License
 
