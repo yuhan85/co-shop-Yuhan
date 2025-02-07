@@ -13,7 +13,7 @@ interface IUserAttributes {
     name: string;
     email: string;
     password: string;
-    isValid: boolean;
+    isValid?: boolean;
     role: 'customer' | 'admin' | 'vendor';
     phone_number: string;
     createdAt?: Date;
@@ -70,7 +70,10 @@ User.init(
         },
         phone_number: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
+            validate: {
+                isMobilePhone: true,
+            }
         },
     },
     {
