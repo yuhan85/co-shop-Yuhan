@@ -42,7 +42,7 @@ export default function Header() {
                     <Nav>
                         <LinkContainer>
                             <StyledLink href={'/'}>Home</StyledLink>
-                            <StyledLink href={'/product/66c612c65ceffddc41609ed4'}>Product</StyledLink>
+                            {/* <StyledLink href={'/product/66c612c65ceffddc41609ed4'}>Product</StyledLink> */}
                             <StyledLink href={'/cart'}>Shopping Cart</StyledLink>
                             <StyledLink href={'/checkout'}>Checkout</StyledLink>
                         </LinkContainer>

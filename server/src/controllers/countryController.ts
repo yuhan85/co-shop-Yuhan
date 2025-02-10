@@ -9,6 +9,7 @@ import {
 
 /**
  * Error-handling wrapper for async controller functions.
+ * Eliminate the need for manually wrapping each async function in a try-catch block.
  */
 const asyncHandler = (fn: Function) => 
     (req: Request, res: Response, next: NextFunction) => 
