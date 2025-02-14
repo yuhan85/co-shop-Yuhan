@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
 import countryRoutes from './routes/countryRoutes';
-
 import couponRoutes from './routes/couponRoutes';
 import orderRoutes from './routes/orderRoutes';
 import productRoutes from './routes/productRoutes';
@@ -10,6 +9,7 @@ import cartRoutes from './routes/cartRoutes';
 import cartitemRoutes from './routes/cartitemRoutes';
 import orderitemRoutes from './routes/orderitemRoutes';
 import paymentRoutes from './routes/paymentRoutes';
+import userRoutes from './routes/userRoutes';
 
 import { errorHandler } from './middleware/errorMiddleware';
 
@@ -28,7 +28,7 @@ app.use('/api/cartitems', cartitemRoutes);
 app.use('/api/orderitems', orderitemRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/countries', countryRoutes); // Use country routes
-
+app.use('/api/users', userRoutes); // Use country routes
 
 // Explicitly cast errorHandler to an ErrorRequestHandler function
 app.use(errorHandler as express.ErrorRequestHandler);

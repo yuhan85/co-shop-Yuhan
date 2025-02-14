@@ -118,6 +118,10 @@
 
    16. npm install express-validator
 
+   17. npm install --save-dev @types/bcrypt npm install bcryptjs ( We use bcryptjs to encript and validate encripted/hashed password )
+   
+   18. npm install --save-dev @type/jsonwebtoken npm install jsonwebtoken ( We use jsonwebtoken to generate JWT token for authentication )
+
 ## License
 
 This work is licensed under CC BY-NC 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/4.0/
