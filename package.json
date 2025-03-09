@@ -10,7 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node-fetch": "^2.6.12",
+    "aws-sdk": "^2.1692.0",
     "express-validator": "^7.2.1",
+    "jwk-to-pem": "^2.0.7",
+    "node-fetch": "^3.3.2",
     "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/aws-sdk": "^0.0.42",
+    "@types/jwk-to-pem": "^2.0.3"
   }
 }

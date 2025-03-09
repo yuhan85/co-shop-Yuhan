@@ -1,14 +1,20 @@
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
+import path from 'path';
 
-dotenv.config({ path: '../../.env' });
-const db = new Sequelize(process.env.DB_NAME!, process.env.DB_USER!, process.env.DB_PASSWORD!, {
-  host: process.env.DB_HOST,
-  port: +process.env.DB_PORT!,
-  dialect: 'mysql',
-  logging: console.log,
-});
-
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+//dotenv.config({ path: '../../.env' });
+const db = new Sequelize(
+  process.env.DB_NAME!,
+  process.env.DB_USER!,
+  process.env.DB_PASSWORD!,
+  {
+    host: process.env.DB_HOST,
+    port: +process.env.DB_PORT!,
+    dialect: 'mysql',
+    logging: console.log,
+  }
+);
 
 db.authenticate()
   .then(() => {

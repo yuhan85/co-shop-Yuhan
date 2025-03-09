@@ -1,13 +1,14 @@
-import Link from "next/link"
-import Header from "@/components/Header";
-import Feature from "@/components/Feature";
+import Link from 'next/link';
+import Header from '@/components/Header';
+import Feature from '@/components/Feature';
+import TopBar from '@/components/TopBar';
 
-export default function HomePage(){
-  return(
+export default function HomePage() {
+  return (
     <>
-        <Header />
-        <Feature/>
+      <TopBar />
+      <Header />
+      <Feature />
     </>
-
-  )
+  );
 }
