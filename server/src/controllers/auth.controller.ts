@@ -2,33 +2,20 @@ import express, { Response, Request } from 'express';
 import { body, validationResult, ValidationChain } from 'express-validator';
 import CognitoService from '../lib/cognito';
 import DatabaseService from '../lib/database';
+import User from '../models/User';
 
-class AuthController {
-  public path = '/auth';
-  public router = express.Router();
-
-  constructor() {
-    this.initRoutes();
-  }
-
-  private initRoutes() {
-    this.router.options('*', this.handlePreflight);
-    this.router.post('/signUp', this.validateBody('signUp'), this.signUp);
-    this.router.post('/signIn', this.validateBody('signIn'), this.signIn);
-    this.router.post('/verify', this.validateBody('verify'), this.verify);
-  }
-  private handlePreflight(req: Request, res: Response) {
+export const handlePreflight = async (req: Request, res: Response): Promise<void> => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // 允许前端请求
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader(
-      'Access-Control-Allow-Headers',
-      'Content-Type, Authorization'
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization'
     );
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.status(204).end();
-  }
+};
 
-  signUp = async (req: Request, res: Response): Promise<void> => {
+export const signUp = async (req: Request, res: Response): Promise<void> => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(422).json({ errors: result.array() });
@@ -44,7 +31,7 @@ class AuthController {
     ];
 
     const cognito = new CognitoService();
-    const database = new DatabaseService();
+    // const database = new DatabaseService();
 
     try {
       const userSub = await cognito.signUpUser(username, password, userAttr);
@@ -58,7 +45,12 @@ class AuthController {
           family_name,
         ];
 
-        await database.query(insertQuery, values);
+        await User.create({
+          user_id: userSub,
+          username,
+          name,
+          family_name,
+        });
         res.status(200).json({ message: 'User registered successfully' });
       } else {
         res.status(500).json({ message: 'User registration failed' });
@@ -72,7 +64,7 @@ class AuthController {
     }
   };
 
-  signIn = async (req: Request, res: Response): Promise<void> => {
+export const signIn = async (req: Request, res: Response): Promise<void> => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(422).json({ errors: result.array() });
@@ -98,7 +90,7 @@ class AuthController {
     }
   };
 
-  verify = async (req: Request, res: Response): Promise<void> => {
+export const verify = async (req: Request, res: Response): Promise<void> => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(422).json({ errors: result.array() });
@@ -123,27 +115,3 @@ class AuthController {
       });
     }
   };
-
-  private validateBody(type: string) {
-    const validationRules: Record<string, ValidationChain[]> = {
-      signUp: [
-        body('username').notEmpty().normalizeEmail().isEmail(),
-        body('password').isString().isLength({ min: 8 }),
-        body('name').notEmpty().isString(),
-        body('family_name').notEmpty().isString(),
-      ],
-      signIn: [
-        body('username').notEmpty().normalizeEmail().isEmail(),
-        body('password').isString().isLength({ min: 8 }),
-      ],
-      verify: [
-        body('username').notEmpty().normalizeEmail().isEmail(),
-        body('code').isString().isLength({ min: 6, max: 6 }),
-      ],
-    };
-
-    return validationRules[type] || [];
-  }
-}
-
-export default AuthController;

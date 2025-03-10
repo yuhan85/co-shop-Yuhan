@@ -52,16 +52,17 @@
 import express from 'express';
 import { Application } from 'express';
 import cors from 'cors';
+import db from './lib/dbConnection';
 
 class App {
   public app: Application;
   public port: number;
 
-  constructor(appInit: { port: number; middlewares: any; controllers: any }) {
+  constructor(appInit: { port: number; middlewares: any; routers: any }) {
     this.app = express();
     this.port = appInit.port;
     this.middlewares(appInit.middlewares);
-    this.routes(appInit.controllers);
+    this.routes(appInit.routers);
     this.app.use(cors());
   }
 
@@ -71,10 +72,16 @@ class App {
     });
   }
 
-  private routes(controllers: any) {
-    controllers.forEach(
-      (controller: { path: string; router: express.Router }) => {
-        this.app.use(controller.path, controller.router);
+  public async startServer() {
+    // Sync the database
+    await db.sync({ alter: true });
+    this.listen();
+  };
+
+  private routes(routers: any) {
+    routers.forEach(
+      (routers: { path: string; router: express.Router }) => {
+        this.app.use(routers.path, routers.router);
       }
     );
   }

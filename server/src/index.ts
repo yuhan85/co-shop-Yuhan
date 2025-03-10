@@ -36,9 +36,22 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import App from './app';
-import HomeController from './controllers/home.controller';
-import AuthController from './controllers/auth.controller';
-import ProtectedController from './controllers/protected.controller';
+// import HomeController from './controllers/home.controller';
+// import AuthController from './controllers/auth.controller';
+// import ProtectedController from './controllers/protected.controller';
+// import express, { Request, Response, NextFunction } from 'express';
+import countryRoutes from './routes/countryRoutes';
+import couponRoutes from './routes/couponRoutes';
+import orderRoutes from './routes/orderRoutes';
+import productRoutes from './routes/productRoutes';
+import reviewRoutes from './routes/reviewRoutes';
+import storeRoutes from './routes/storeRoutes';
+import cartRoutes from './routes/cartRoutes';
+import cartitemRoutes from './routes/cartitemRoutes';
+import orderitemRoutes from './routes/orderitemRoutes';
+import paymentRoutes from './routes/paymentRoutes';
+import userRoutes from './routes/userRoutes';
+import authRoutes from './routes/authRoutes';
 
 const app = new App({
   port: 5000,
@@ -51,12 +64,28 @@ const app = new App({
     }),
     bodyParser.json(),
     bodyParser.urlencoded({ extended: true }),
+    // new AuthMiddleware()
   ],
-  controllers: [
-    new HomeController(),
-    new AuthController(),
-    new ProtectedController(),
+  routers: [
+    {path: '/', router: express.Router()},
+    {path: '/api/countries', router: countryRoutes},
+    {path: '/api/coupons', router: couponRoutes},
+    {path: '/api/orders', router: orderRoutes},
+    {path: '/api/products', router: productRoutes},
+    {path: '/api/reviews', router: reviewRoutes},
+    {path: '/api/stores', router: storeRoutes},
+    {path: '/api/carts', router: cartRoutes},
+    {path: '/api/cartitems', router: cartitemRoutes},
+    {path: '/api/orderitems', router: orderitemRoutes},
+    {path: '/api/payments', router: paymentRoutes},
+    {path: '/api/users', router: userRoutes},
+    {path: '/api/countries', router: countryRoutes},
+    {path: 'api/auth', router: authRoutes},
+
+    // new HomeController(),
+    // new AuthController(),
+    // new ProtectedController(),
   ],
 });
 
-app.listen();
+app.startServer();
