@@ -3,11 +3,10 @@ import crypto from 'crypto';
 
 class CognitoService {
   private config = {
-    region: 'us-east-2',
+    region: process.env.AWS_REGION,
   };
-  private secretHash: string =
-    'vgs79h16a3csu1jbi6vqclmgpaddscsgouitso103rmjrce1q2l'; //AWS中App client information的Client ID
-  private clientId: string = '2hjup7miiiafpafc85te9vvl4r';
+  private secretHash: string = process.env.SECRET_HASH!; //AWS中App client information的Client ID
+  private clientId: string = process.env.CLIENT_ID!;
 
   private cognitoIdentity;
 

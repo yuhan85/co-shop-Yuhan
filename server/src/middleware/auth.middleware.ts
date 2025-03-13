@@ -17,8 +17,8 @@ let pems: { [key: string]: string } = {};
 class AuthMiddleware {
   // 定义一个认证中间件类。
 
-  private poolRegion: string = 'us-east-2';
-  private userPoolId: string = 'us-east-2_h85cKaXGO';
+  private poolRegion: string = process.env.POOL_REGION!;
+  private userPoolId: string = process.env.USER_POOL_ID!;
   // 定义 AWS Cognito 用户池的区域和 ID。
 
   constructor() {
